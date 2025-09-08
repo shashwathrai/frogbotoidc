@@ -1,6 +1,6 @@
 - params:
     git:
-      repoName: python-fb-ex
+      repoName: frogbotoidc
       branches:
         - main
     scan:
