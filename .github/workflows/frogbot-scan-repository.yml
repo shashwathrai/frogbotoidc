@@ -51,4 +51,4 @@ jobs:
         # with:
         #   oidc-provider-name: ""
         with:
-          oidc-provider-name: "shashwathr"
+          oidc-provider-name: "srs-test"
