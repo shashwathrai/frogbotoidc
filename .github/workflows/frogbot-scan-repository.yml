@@ -1,5 +1,4 @@
 name: "Frogbot Scan Repository"
-
 on:
   workflow_dispatch:
   schedule:
@@ -16,7 +15,7 @@ permissions:
 jobs:
   scan-repository:
     runs-on: ubuntu-latest
-    name: Scan Repository (${{ matrix.branch }} branch) # Added job name for clarity
+    name: Scan Repository (${{ matrix.branch }} branch)
     strategy:
       matrix:
         # The repository scanning will be triggered periodically on the following branches.
@@ -24,30 +23,18 @@ jobs:
         
     steps:
       - uses: jfrog/frogbot@v2.24.1
-        # --- CORRECTED: 'with' block must come immediately after 'uses' ---
         with: 
-          # [Mandatory if using OIDC authentication protocol]
-          # Insert to oidc-provider-name the 'Provider Name' defined in the OIDC integration configured in the JPD
+          # --- This line forces the executable version ---
+          version: "2.24.1" 
+          # ---------------------------------------------
           oidc-provider-name: "srs-test"
 
-        # --- CORRECTED: 'env' block must be indented correctly ---
         env:
-          # [Mandatory]
-          # JFrog platform URL
           JF_URL: ${{ secrets.JF_URL }}
-
-          # [Conditional Authentication - OIDC is used here, so ACCESS_TOKEN is commented out]
-          # JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }} 
           
-          # [Optional CA Certificate Path]
-          # NOTE: $CI_PROJECT_PATH is a GitLab variable. Use GitHub context if this path is dynamic.
-          # If the file is just in the checkout directory, a simple relative path might suffice.
+          # NOTE: $CI_PROJECT_PATH is a GitLab variable. For GitHub, ensure the path is correct.
           JFROG_CLI_CA_CERT_PATH: "/builds/$CI_PROJECT_PATH/xray-root-ca.pem" 
           
-          # [Mandatory]
-          # The GitHub token is automatically generated for the job
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          # [Mandatory]
-          # The name of the branch on which Frogbot will perform the scan
           JF_GIT_BASE_BRANCH: ${{ matrix.branch }}
